@@ -4,6 +4,8 @@ use bevy::sprite::{ MaterialMesh2dBundle, Mesh2dHandle };
 use bevy::DefaultPlugins;
 use bevy::prelude::*;
 use bevy::window::{ PresentMode, Window, WindowMode, WindowPlugin, WindowResized, WindowTheme };
+mod components;
+use components::{ Player, PlayerBundle };
 
 #[derive(Component)]
 struct GameSettings {
@@ -67,12 +69,20 @@ fn main() {
 fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>
+    mut materials: ResMut<Assets<ColorMaterial>>,
+    asset_server: Res<AssetServer>
 ) {
     let game_settings = GameSettings::new();
     let tile_size = game_settings.tile_size;
     let player = Player::new();
+    let field = ItemBundle::new(
+        asset_server,
+        Item::new("tile".to_string()),
+        "tiles/Tile_67.png".to_string(),
+        Coordinates(20.0, 20.0, 0.0)
+    );
 
+    commands.spawn(field);
     commands.spawn(Camera2dBundle::default());
     commands.spawn(game_settings);
     commands.spawn((
